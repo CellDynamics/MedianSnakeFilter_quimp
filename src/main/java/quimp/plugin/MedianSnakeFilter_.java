@@ -41,7 +41,7 @@ public class MedianSnakeFilter_ extends QWindowBuilder implements IQuimpBOAPoint
   protected ViewUpdater qcontext; //!< remember QuimP context to recalculate and update its view 
 
   /**
-   * Create running mean filter.
+   * Create running median filter.
    * 
    * <p>All default parameters should be declared here. Non-default are passed by
    * setPluginConfig(ParamList)
@@ -54,7 +54,7 @@ public class MedianSnakeFilter_ extends QWindowBuilder implements IQuimpBOAPoint
     uiDefinition = new ParamList(); // will hold ui definitions
     // configure window, names of UI elements are also names of variables
     // exported/imported by set/getPluginConfig
-    uiDefinition.put("name", "MeanFilter"); // name of win
+    uiDefinition.put("name", "MedianFilter"); // name of win
     uiDefinition.put("window", "spinner: 1: 21: 2:" + Integer.toString(window));
     uiDefinition.put("help", "Window must be uneven. Set 1 to switch filter off.");
     buildWindow(uiDefinition); // construct ui (not shown yet)
