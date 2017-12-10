@@ -3,6 +3,7 @@ package quimp.plugin;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JSpinner;
@@ -93,10 +94,37 @@ public class MedianSnakeFilter_ extends QWindowBuilder implements IQuimpBOAPoint
     window = getIntegerFromUI("window");
     LOGGER.debug(String.format("Run plugin with params: window %d", window));
 
+    if (window % 2 == 0) {
+      throw new QuimpPluginException("Input argument must be uneven");
+    }
+    if (window >= xyData.size()) {
+      throw new QuimpPluginException("Processing window to long");
+    }
+    if (window < 0) {
+      throw new QuimpPluginException("Processing window is negative");
+    }
+
     // do filtering
     int cp = window / 2; // left and right range of window
     List<Point2d> out = new ArrayList<Point2d>();
+    int indexTmp; // temporary index after padding
+    double[] xs = new double[window]; // window point
+    double[] ys = new double[window];
+    int l = 0;
 
+    for (int c = 0; c < xyData.size(); c++) { // for every point in data
+      l = 0;
+      for (int cc = c - cp; cc <= c + cp; cc++) { // collect points in range c-2 c-1 c-0 c+1 c+2
+        indexTmp = IPadArray.getIndex(xyData.size(), cc, IPadArray.CIRCULARPAD);
+        xs[l] = xyData.getX()[indexTmp];
+        ys[l] = xyData.getY()[indexTmp];
+        l++;
+      }
+      // get median
+      Arrays.sort(xs);
+      Arrays.sort(ys);
+      out.add(new Point2d(xs[cp], ys[cp]));
+    }
     return out;
   }
 

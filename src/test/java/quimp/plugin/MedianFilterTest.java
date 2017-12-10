@@ -56,8 +56,7 @@ public class MedianFilterTest {
    * 
    * <p>Pre: Vector of 1-10 elements
    * 
-   * <p>Post: Running mean for window 3: [4.3333 2.0000 3.0000 4.0000 5.0000 6.0000 7.0000 8.0000
-   * 9.0000 6.6667]
+   * <p>Post: Running median for window 3
    * 
    * @throws com.github.celldynamics.quimp.plugin.QuimpPluginException QuimpPluginException
    */
@@ -73,7 +72,7 @@ public class MedianFilterTest {
       }
     });
     double[] expected =
-            { 4.3333, 2.0000, 3.0000, 4.0000, 5.0000, 6.0000, 7.0000, 8.0000, 9.0000, 6.6667 };
+            { 2.0, 2.0000, 3.0000, 4.0000, 5.0000, 6.0000, 7.0000, 8.0000, 9.0000, 9.0 };
 
     List<Point2d> out;
     out = in.runPlugin();
