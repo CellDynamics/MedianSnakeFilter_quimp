@@ -1,17 +1,25 @@
 package quimp.plugin;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.scijava.vecmath.Point2d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.celldynamics.quimp.ViewUpdater;
 import com.github.celldynamics.quimp.plugin.ParamList;
 import com.github.celldynamics.quimp.plugin.QuimpPluginException;
 
@@ -27,6 +35,8 @@ public class MedianFilterTest {
 
   private List<Point2d> testcase;
   static final Logger LOGGER = LoggerFactory.getLogger(MedianFilterTest.class.getName());
+
+  private ViewUpdater vu = Mockito.mock(ViewUpdater.class);
 
   /**
    * Called after construction but before tests.
@@ -83,7 +93,59 @@ public class MedianFilterTest {
       assertEquals(expected[i], out.get(i).getX(), 1e-4);
       assertEquals(out.get(i).getX(), out.get(i).getY(), 1e-6);
     }
+  }
 
+  /**
+   * Set get plugin config.
+   * 
+   * @throws Exception Exception
+   */
+  @Test
+  public void test_getPluginConfig() throws Exception {
+    MedianSnakeFilter_ in = new MedianSnakeFilter_();
+    in.attachData(testcase);
+    ParamList exp = new ParamList() {
+      {
+        put("Window", String.valueOf(3.0));
+      }
+    };
+
+    ParamList conf = in.getPluginConfig();
+    assertThat(conf.get("Window"), is(exp.get("window")));
+
+    in.setPluginConfig(new ParamList() {
+      {
+        put("Window", String.valueOf(5.0));
+      }
+    });
+    assertThat(in.getPluginConfig().get("Window"), is("5.0"));
+
+  }
+
+  /**
+   * Test view updater.
+   * 
+   * @throws Exception Exception
+   */
+  @Test
+  public void test_ApplyButton() throws Exception {
+    MedianSnakeFilter_ in = new MedianSnakeFilter_();
+    in.attachData(testcase);
+    in.attachContext(vu);
+    in.actionPerformed(new ActionEvent(new JButton(), 0, "apply"));
+    Mockito.verify(vu, Mockito.times(1)).updateView();
+  }
+
+  /**
+   * Test of about string.
+   * 
+   * @throws Exception Exception
+   */
+  @Test
+  public void test_GetVersion() throws Exception {
+    MedianSnakeFilter_ in = new MedianSnakeFilter_();
+    String ret = in.getVersion();
+    assertThat(in, is(not(ret.isEmpty())));
   }
 
 }

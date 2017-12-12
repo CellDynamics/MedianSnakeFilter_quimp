@@ -160,7 +160,6 @@ public class MedianSnakeFilter_ extends QWindowBuilder implements IQuimpBOAPoint
       setValues(par); // populate loaded values to UI
       window = par.getIntValue("window");
     } catch (Exception e) {
-      e.printStackTrace();
       // we should never hit this exception as parameters are not touched
       // by caller they are only passed to configuration saver and
       // restored from it
@@ -204,7 +203,7 @@ public class MedianSnakeFilter_ extends QWindowBuilder implements IQuimpBOAPoint
   @Override
   public void actionPerformed(ActionEvent e) {
     Object b = e.getSource();
-    if (b == applyB) { // pressed apply, copy ui data to plugin
+    if (b == applyB || e.getActionCommand().equals("apply")) { // pressed apply
       qcontext.updateView();
     }
   }
